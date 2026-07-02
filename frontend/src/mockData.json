@@ -1,0 +1,47 @@
+{
+  "metrics": {
+    "rfEmissions": 1284,
+    "opticalFrames": 1800,
+    "thermalFrames": 900
+  },
+  "processing": {
+    "rfSpectrograms": 48,
+    "corruptedPackets": 3
+  },
+  "fusion": {
+    "rfMatch": 91,
+    "visualMatch": 74,
+    "thermalMatch": 68,
+    "overallConfidence": 86
+  },
+  "targets": [
+    {
+      "id": "TGT-001",
+      "type": "DJI Phantom",
+      "status": "Drone",
+      "altitude": 142,
+      "velocity": 28,
+      "heading": "NNE 22°",
+      "distanceToHQ": 380,
+      "threatScore": 87,
+      "tier": "Tier 1 Critical",
+      "proximityRisk": 92,
+      "trajectoryRisk": 82,
+      "payloadRisk": 65
+    },
+    {
+      "id": "TGT-002",
+      "type": "Mavic",
+      "status": "Drone",
+      "altitude": 85,
+      "velocity": 14,
+      "heading": "E 90°",
+      "distanceToHQ": 850,
+      "threatScore": 54,
+      "tier": "Tier 2 Monitor",
+      "proximityRisk": 35,
+      "trajectoryRisk": 20,
+      "payloadRisk": 10
+    }
+  ]
+}
