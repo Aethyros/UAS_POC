@@ -1,0 +1,20 @@
+# CORE API & ORCHESTRATION LAYER (Switchboard)
+fastapi
+uvicorn[standard]
+
+# MATHEMATICAL SYNTHESIS & SIGNAL PROCESSING
+numpy
+scipy
+matplotlib
+requests
+
+# AI DETECTION & COMPUTER VISION
+ultralytics 
+opencv-python 
+torch 
+torchvision
+
+# DATABASE (GROUND-TRUTH SIGNATURES)
+psycopg2-binary
+
+# PROTOCOL INJECTION & TELEMETRY (Takeover)
