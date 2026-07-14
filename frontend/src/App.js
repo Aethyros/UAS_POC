@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { theme } from './theme';
+import mockData from './mockData.json';
 
+// Import modular components
 import CaptureScreen from './components/CaptureScreen';
 import ProcessScreen from './components/ProcessScreen';
 import FusionScreen from './components/FusionScreen';
@@ -10,6 +12,32 @@ import ResponseScreen from './components/ResponseScreen';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('capture');
+  
+  // Master Global State for all moving targets
+  const [targets, setTargets] = useState(mockData.targets);
+
+  // THE MASTER GHOST BACKEND: Updates data globally every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTargets(prevTargets => prevTargets.map(tgt => {
+        // TGT-001: Hostile drone closing distance to HQ
+        if (tgt.id === 'TGT-001' && tgt.distanceToHQ > 0) {
+          const newDistance = Math.max(0, tgt.distanceToHQ - (tgt.velocity / 2));
+          // Dynamically scale the threat score higher as it gets closer
+          const newThreatScore = Math.min(100, Math.floor(87 + (380 - newDistance) * 0.05));
+          return { ...tgt, distanceToHQ: newDistance, threatScore: newThreatScore };
+        }
+        // TGT-002: Monitoring drone loitering
+        if (tgt.id === 'TGT-002') {
+          const altChange = Math.floor(Math.random() * 5) - 2;
+          return { ...tgt, altitude: tgt.altitude + altChange };
+        }
+        return tgt;
+      }));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const getSidebarBtnStyle = (tabName) => ({
     padding: '15px 20px', cursor: 'pointer',
@@ -33,13 +61,13 @@ export default function App() {
         </div>
       </div>
 
-      {/* DYNAMIC MAIN CONTENT */}
+      {/* DYNAMIC MAIN CONTENT - Passing live targets data down as props */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {activeTab === 'capture' && <CaptureScreen />}
         {activeTab === 'process' && <ProcessScreen />}
         {activeTab === 'fusion' && <FusionScreen />}
-        {activeTab === 'track' && <TrackScreen />}
-        {activeTab === 'assess' && <AssessScreen />}
+        {activeTab === 'track' && <TrackScreen targets={targets} />}
+        {activeTab === 'assess' && <AssessScreen targets={targets} />}
         {activeTab === 'response' && <ResponseScreen />}
       </div>
 
