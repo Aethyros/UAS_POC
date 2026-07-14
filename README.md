@@ -66,7 +66,7 @@ counter-uas-prototype/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/counter-uas-prototype/UAS_POC.git
+git clone https://github.com/Aethyros/UAS_POC.git
 cd UASPOC
 
 # 2. Create and activate a virtual environment
@@ -99,7 +99,7 @@ Ensure your backend server is running, then open a second terminal:
 **1. Simulate a Standard Civilian Drone (Fixed-Frequency)**
 
 ```bash
-python src/rf_intelligence/visualizer.py -p dji_phantom_4
+python src/rf_intelligence/visualizer.py
 ```
 
 **2. Simulate a Military/Evasive Threat (FHSS Hopping)**
@@ -107,7 +107,7 @@ python src/rf_intelligence/visualizer.py -p dji_phantom_4
 Triggers the HUD's master warning overlay and visualizes dynamic frequency hopping based on database telemetry:
 
 ```bash
-python src/rf_intelligence/visualizer.py -p autel_evo_max --fhss --base-freq 5.850 --hops 6
+python src/rf_intelligence/visualizer.py
 ```
 
 ## API Reference
