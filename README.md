@@ -6,10 +6,8 @@
 
 - [Overview](#overview)
 - [Problem Statement](#problem-statement)
-- [Key Architectural Features](#key-architectural-features)
 - [Repository Structure](#repository-structure)
 - [Getting Started](#getting-started)
-- [Using the Intelligence HUD (Visualizer)](#using-the-intelligence-hud-visualizer)
 - [API Reference](#api-reference)
 
 ## Overview
@@ -20,14 +18,6 @@ This platform provides an integrated, real-time software simulation pipeline for
 
 The proliferation of commercially available UAVs has significantly outpaced the development of effective detection and neutralization technologies. While drones offer substantial utility, their growing accessibility introduces serious security risks in contested airspaces and critical infrastructure zones. This PoC aims to simulate the "Decision Support" layer that bridges physical SDR hardware and multi-sensor fusion suites.
 
-## Key Architectural Features
-
-Our RF Intelligence module has been deeply optimized for real-time visualization and accurate DSP (Digital Signal Processing):
-
-- **Unified DSP Execution** — Time-domain waveforms and frequency-domain FFT spectrograms are generated in a single pass. This ensures 100% mathematical synchronization between what you see on the oscilloscope and the spectrum analyzer.
-- **High-Performance FHSS Synthesis** — Evasive military Frequency-Hopping Spread Spectrum (FHSS) signals are generated using vectorized, pre-allocated single-precision (float32) arrays, reducing memory overhead and CPU latency by >70%.
-- **UI Decimation** — The backend dynamically downsamples large arrays (e.g., 64,000+ points down to 2,048) right before JSON serialization. This cuts network transfer times by 90% and ensures the browser UI never freezes.
-- **Telemetry-Aware Generation** — The physical duration of RF bursts (Time-on-Air) is dynamically calculated using database ground-truth values (`packet_length` and `symbol_rate`).
 
 ## Repository Structure
 
@@ -41,18 +31,24 @@ counter-uas-prototype/
 │                            #   psycopg2, opencv-python, torch, matplotlib
 ├── README.md
 │
+├──frontend            # Owner: Sumedh Bhat # Stores the frontend of the prototype
 └── src/
     ├── __init__.py
     ├── main.py
     ├── rf_intelligence/            # Owner: Abhishek Bhadani
     │   ├── routes.py               # Unified API Endpoints
-    │   ├── generator.py            # Signal Synthesis (Float32 Optimized)
+    │   ├── generator.py            # Signal Synthesis 
     │   ├── database.py             # PostgreSQL Telemetry Queries
-    │   └── visualizer.py           # Military HUD / Spectrum Analyzer
+    │   └── visualizer.py           # Spectrum Visualizer
     ├── signal_processing/          # Owner: Bhavya Agrawal
-    ├── ai_detection/                # Owner: Sugapriyan S
-    ├── airspace_tracking/           # Owner: Prathamesh Kapase
-    └── mission_control/             # Owner: Sumedh Bhat
+    │ ├── spectrogram_generator.py  # Spectrogram Generation
+    │ └── signal_filter.py          # Signal Processing Filter
+    ├── ai_detection/               # Owner: Sugapriyan S
+    │ ├── best.pt                   # Stores Model Paramters
+    │ └── detect.py                 # Detection Algorithm
+    └── airspace_tracking/          # Owner: Prathamesh Kapase
+      └── tracking + detect.py      # Tracking Module
+    
 ```
 
 ## Getting Started
@@ -60,7 +56,7 @@ counter-uas-prototype/
 ### Prerequisites
 
 - Python 3.x
-- PostgreSQL (running locally with seeded drone signatures)
+- PostgreSQL
 
 ### Installation
 
@@ -87,27 +83,8 @@ pip install -r requirements.txt
 Start the core FastAPI backend so downstream modules can consume the data:
 
 ```bash
-uvicorn src.main:app --reload --host 127.0.0.1 --port 8000
-```
-
-## Using the Intelligence HUD (Visualizer)
-
-The `visualizer.py` script acts as a tactical Heads-Up Display (HUD) to verify backend signals. It queries the local API and renders a synchronized Oscilloscope and FFT Spectrum Analyzer.
-
-Ensure your backend server is running, then open a second terminal:
-
-**1. Simulate a Standard Civilian Drone (Fixed-Frequency)**
-
-```bash
-python src/rf_intelligence/visualizer.py
-```
-
-**2. Simulate a Military/Evasive Threat (FHSS Hopping)**
-
-Triggers the HUD's master warning overlay and visualizes dynamic frequency hopping based on database telemetry:
-
-```bash
-python src/rf_intelligence/visualizer.py
+cd src
+uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 ## API Reference
